@@ -12,14 +12,14 @@ import {DamnValuableToken} from "DamnVulnerableDeFi/DamnValuableToken.sol";
 import {UnstoppableVault} from "DamnVulnerableDeFi/unstoppable/UnstoppableVault.sol";
 
 contract Unstoppable is Test {
-    uint256 internal constant TOKENS_IN_VAULT = 1000000 ether; 
+    uint256 internal constant TOKENS_IN_VAULT = 1000000 ether;
     uint256 internal constant INITIAL_PLAYER_TOKEN_BALANCE = 100 ether;
 
     UnstoppableVault internal vault;
     ReceiverUnstoppable internal receiverContract;
     DamnValuableToken internal token;
-    address payable internal deployer; 
-    address payable internal player; 
+    address payable internal deployer;
+    address payable internal player;
     address payable internal someUser;
 
     function setUp() public {
@@ -41,9 +41,11 @@ contract Unstoppable is Test {
 
         token.transfer(player, INITIAL_PLAYER_TOKEN_BALANCE);
 
-
         assertEq(token.balanceOf(address(vault)), TOKENS_IN_VAULT);
-        assertEq(token.balanceOf(address(player)), INITIAL_PLAYER_TOKEN_BALANCE);
+        assertEq(
+            token.balanceOf(address(player)),
+            INITIAL_PLAYER_TOKEN_BALANCE
+        );
 
         vm.startPrank(someUser);
         receiverContract = new ReceiverUnstoppable(address(vault));
@@ -64,10 +66,9 @@ contract Unstoppable is Test {
     }
 
     function success() internal {
-         /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
+        /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
 
         // It is no longer possible to execute flash loans
-        
         vm.prank(someUser);
         receiverContract.executeFlashLoan(10);
         vm.stopPrank();
